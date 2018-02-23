@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 // used to convert between 16M color palette and reduced set defined by three alphabetic characters
-const fullColorFactor = 852.4141855; 
+const fullColorFactor = 954.6068278805121; //954.5525147928994 
 
 @Component({
   selector: 'app-root',
@@ -11,17 +11,18 @@ const fullColorFactor = 852.4141855;
 export class AppComponent implements OnInit {
   // characters that show up in the code box
   @Input() codeOutputChars:string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  base26Chars:string = '0123456789ABCDEFGHIJKLMNOP';
   // allow upper and lower in code box, then convert to upper
   @Input() codeInputChars:string = 'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ';
   @Input() messageEncodeChars:string = '0aAbBcC1dDeEfF2gGhHiI3jJkKlL4mMnNoO5pPqQrR6sStTuU7vVwWxX8yYzZ9';
   // allow more characters than are actually encoded; excess characters pass through without encoded/decoding
   @Input() messageAllowedChars:string = ' .0aAbBcC1dDeEfF2gGhHiI3jJkKlL4mMnNoO5pPqQrR6sStTuU7vVwWxX8yYzZ9-';
 
-  baseColor:Color = this.hexToColor('#FFFFFF');
-  myPrivateColor:Color = this.hexToColor('#FFFFFF');
-  myPublicColor:Color = this.hexToColor('#FFFFFF');
-  friendsPublicColor:Color = this.hexToColor('#FFFFFF');
-  sharedSecretColor:Color = this.hexToColor('#FFFFFF');
+  baseColor:Color = this.hexToColor('#ffffff');
+  myPrivateColor:Color = this.hexToColor('#ffffff');
+  myPublicColor:Color = this.hexToColor('#ffffff');
+  friendsPublicColor:Color = this.hexToColor('#ffffff');
+  sharedSecretColor:Color = this.hexToColor('#ffffff');
 
   // message input box backing values
   @Input() encode:string = 'Fourth Grade Rules';
@@ -36,22 +37,34 @@ export class AppComponent implements OnInit {
   ngOnInit() { }
 
   hexToColor(hexColorValue:string):Color{
-    let color = {hex:hexColorValue, rgb:this.hexToRgb(hexColorValue), code:this.hexToCode(hexColorValue), alpha:this.hexToAlpha(hexColorValue)};
-    console.log(color);
+    // console.log('start hexToColor: ' + hexColorValue);
+    hexColorValue = hexColorValue.toLowerCase();
+    let smallDecimal = this.hexToSmallDecimal(hexColorValue);
+    // console.log("hexToSmallDecimal: " + smallDecimal);
+
+    return this.smallDecimalToColor(smallDecimal);
+  }
+
+  smallDecimalToColor(smallDecimal:number):Color {
+    let color = {hex:this.smallDecimalToHex(smallDecimal), small:smallDecimal, code:this.smallDecimalToCode(smallDecimal), alpha:this.smallDecimalToAlpha(smallDecimal)};
+    // console.log('hexToColor: ' + color.hex + ', ' + color.code + ', ' + color.small + ', ' + color.alpha);
+
     return color;
   }
 
   colorInput(colorName:string, hexColorValue:string){
+    hexColorValue = hexColorValue.toLowerCase();
     this[colorName] = this.hexToColor(hexColorValue);
 
     this.calculateValues();
   }
 
   codeInput(colorName:string) {
-    let text:string = this[colorName].code.toUpperCase();
-    this[colorName].code = text; // force uppercase
+    this[colorName].code = this[colorName].code.toUpperCase(); // force uppercase
 
-    let hex = this.codeToHex(text);
+    let code:string = this[colorName].code.toUpperCase();
+    let smallDecimal = this.codeToSmallDecimal(code);
+    let hex = this.smallDecimalToHex(smallDecimal);
     this[colorName] = this.hexToColor(hex);
 
     // TODO: if base color changed... warn to make sure friend has same base color
@@ -63,55 +76,65 @@ export class AppComponent implements OnInit {
     console.log('calculating colors');
     if (this.myPrivateColor && this.baseColor){
       // calculate my public color
-      this.myPublicColor = this.hexToColor(this.blendHex(this.myPrivateColor.hex, this.baseColor.hex, 0.50));
-
+      // this.myPublicColor = this.blendColors(this.baseColor, this.myPrivateColor, 0.5);
+      this.myPublicColor = this.fakeBlend(this.baseColor, this.myPrivateColor, 0.5);
       if (this.friendsPublicColor){
+  
         // calculate the shared secret color
-        this.sharedSecretColor = this.hexToColor(this.blendHex(this.myPrivateColor.hex, this.friendsPublicColor.hex, 0.50))
+        // this.sharedSecretColor = this.blendColors(this.friendsPublicColor, this.myPrivateColor, 0.66666666);
+        this.sharedSecretColor = this.fakeBlend(this.friendsPublicColor, this.myPrivateColor, 0.66666666);
         this.encrypt();
         this.decrypt();
       }
     }
   }
 
-  letterPositions(text:string):number[]{
-    let positions:number[] = [0,0,0];
-    for (var index=0; index < text.length; index++) { 
-      let char = text.charAt(index);
-      let position = this.codeOutputChars.indexOf(char) + 1;
-      positions[index] = position;
+  codeToHex(code:string):string {
+    // scrub by converting to small decimal value first
+    let smallDecimal = this.codeToSmallDecimal(code);
+
+    return this.smallDecimalToHex(smallDecimal);
+  }
+
+  hexToSmallDecimal(hexColorValue:string):number {
+    let hexNumber = hexColorValue.replace('#','');
+    let fullValue = parseInt(hexNumber, 16);
+
+    return this.scrubSmallDecimal(Math.ceil(fullValue / fullColorFactor));
+  }
+
+  scrubSmallDecimal(smallDecimal:number):number {
+    return Math.max(Math.min(Math.ceil(smallDecimal), (26 + Math.pow(26, 2) + Math.pow(26, 3))), 0);
+  }
+
+  smallDecimalToHex(smallDecimal:number):string{
+    let fullValue = Math.floor(smallDecimal*fullColorFactor);
+
+    return '#' + this.padLeft(fullValue.toString(16), '0', 6);
+  }
+
+  codeToSmallDecimal(code:string):number{
+    let base26:string = '';
+    for (var codeIndex=0; codeIndex < code.length; codeIndex++) {
+      let letter = code[codeIndex];
+      let letterIndex = this.codeOutputChars.indexOf(letter);
+      base26 = base26 + this.base26Chars[letterIndex];
     }
 
-    return positions;
+    let smallDecimal = parseInt(base26, 26);
+    return smallDecimal;
   }
 
-  codeToHex(text:string):string {
-    let positions = this.letterPositions(text);
-    let reducedValue = positions[2] + positions[1] * 27 + positions[0] * 729;
-    let fullValue = Math.floor(reducedValue*fullColorFactor);
+  smallDecimalToCode(smallDecimal:number):string {
+    let code:string = '';
+    let base26 = smallDecimal.toString(26);
+    for (var baseIndex=0; baseIndex < base26.length; baseIndex++) {
+      let val = base26[baseIndex].toUpperCase();
+      let valIndex = this.base26Chars.indexOf(val);
+      code = code + this.codeOutputChars[valIndex];
+    }
 
-    let hexColorValue = '#' + this.padLeft(fullValue.toString(16), '0', 6);
-
-    console.log(reducedValue + ',' + fullValue + ',' + hexColorValue + ',[' + positions[0] + ',' + positions[1] + ',' + positions[2] + ']');
-    return hexColorValue;
-  }
-
-  hexToCode(hexColorValue:string):string {
-    let hexValue = hexColorValue.replace('#','');
-    let fullValue = parseInt(hexValue, 16);
-    let reducedValue = Math.ceil(fullValue / fullColorFactor);
-    let positions:number[] = [0,0,0];
-    positions[0] = Math.floor(reducedValue / 729);
-    positions[1] = Math.floor((reducedValue % 729)/27);
-    positions[2] = Math.floor((reducedValue % 729) % 27);
-
-    console.log(reducedValue + ',' + fullValue + ',' + hexColorValue + ',[' + positions[0] + ',' + positions[1] + ',' + positions[2] + ']');
-    let text:string
-    text = positions[0] > 0 ? this.codeOutputChars[positions[0] - 1] : '';
-    text = text + (positions[1] > 0 ? this.codeOutputChars[positions[1] - 1] : '');
-    text = text + (positions[2] > 0 ? this.codeOutputChars[positions[2] - 1] : '');
-    
-    return text;
+    return code;
   }
 
   padLeft(text:string, padChar:string, size:number): string {
@@ -152,8 +175,14 @@ export class AppComponent implements OnInit {
       return Math.floor(Math.random()*(max-min+1)+min);
   }
 
-  blendHex(color1:string, color2:string, percentage:number):string {
-    return this.rgbToHex(this.blendRGB(this.hexToRgb(color1), this.hexToRgb(color2), percentage));
+  fakeBlend(color1:Color, color2:Color, percentage:number):Color {
+    return this.smallDecimalToColor((color1.small + color2.small) % Math.pow(26, 3))
+  }
+
+  blendColors(color1:Color, color2:Color, percentage:number):Color {
+   let hex = this.rgbToHex(this.blendRGB(this.hexToRgb(color1.hex), this.hexToRgb(color2.hex), percentage)); // already scrubbed
+
+   return this.hexToColor(hex);
   }
 
   blendRGB(color1:number[], color2:number[], percentage:number):number[]{
@@ -164,14 +193,19 @@ export class AppComponent implements OnInit {
     ];
   }
 
-  componentToHex(c:number):string {
+  componentToHexFragment(c:number):string {
     let hex = Math.round(c).toString(16)
     // var hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
   }
 
   rgbToHex(rgb:number[]):string {
-    return "#" + this.componentToHex(rgb[0]) + this.componentToHex(rgb[1]) + this.componentToHex(rgb[2]);
+    let hex = "#" + this.componentToHexFragment(rgb[0]) + this.componentToHexFragment(rgb[1]) + this.componentToHexFragment(rgb[2]);
+
+    // scrub the hex value by converting to small decimal value first
+   let smallDecimal = this.hexToSmallDecimal(hex);
+
+   return this.smallDecimalToHex(smallDecimal);
   }
 
   hexToRgb(hex:string):number[] {
@@ -179,39 +213,35 @@ export class AppComponent implements OnInit {
     return result ? [parseInt(result[1], 16),parseInt(result[2], 16),parseInt(result[3], 16)] : null;
   }
 
-  hexToAlpha(hex:string):string {
+  smallDecimalToAlpha(smalldecimal:number):string {
     let result:string = '';
+    let hex = this.smallDecimalToHex(smalldecimal);
     for(var i = 1; i < hex.length; i++){ // skip hash character at beginning
-      // console.log('hex[' + i + ']: ' + hex.charAt(i) + ', ' + String.fromCharCode(33 + parseInt(hex.charAt(i), 16)));
       result = result + String.fromCharCode(65 + parseInt(hex.charAt(i), 16))
     }
-    // console.log('alpha: ' + result);
+
     return result;
   }
-
   
-
-  /** Enrypt a given text using key */
+  // Encrypt a given text using key 
   encrypt() {
-    // console.log('encrypting ' + this.encode);
     this.encoded = Array.prototype.map.call(this.encode, (letter: string, index: number): string => {
       if (this.messageEncodeChars.indexOf(letter) < 0 || letter == ' ') return letter;
       let shift = this.shiftBy(index);
       let newIndex = (this.messageEncodeChars.indexOf(letter) + shift) % this.messageEncodeChars.length;
-      // console.log('shift:' + shift + ', index:' + newIndex + ', char:' + this.messageEncodeChars[newIndex] + ', map:'  + this.messageEncodeChars)
+
       return this.messageEncodeChars[newIndex];
     }).join('')
   }
 
-  /** Decrypt ciphertext based on key */
+  // Decrypt ciphertext based on key 
   decrypt() {
-    // console.log('decrypting ' + this.decode);
     this.decoded = Array.prototype.map.call(this.decode, (letter: string, index: number): string => {
       if (this.messageEncodeChars.indexOf(letter) < 0 || letter == ' ') return letter;
       let reversedChars = this.messageEncodeChars.split("").reverse().join("");
       let shift = this.shiftBy(index);
       let newIndex = (reversedChars.indexOf(letter) + shift) % reversedChars.length;
-      // console.log('shift:' + shift + ', index:' + newIndex + ', char:' + reversedChars[newIndex] + ', map:'  + reversedChars)
+
       return reversedChars[newIndex];
     }).join('')
   }
@@ -220,7 +250,7 @@ export class AppComponent implements OnInit {
     let shiftByIndex = index % this.sharedSecretColor.alpha.length;
     let shiftByChar = this.sharedSecretColor.alpha[shiftByIndex];
     let shiftBy = this.messageEncodeChars.indexOf(shiftByChar);
-    // console.log('alpha:' + this.sharedSecretColor.alpha + ", index:" + index + ', shiftByIndex:' + shiftByIndex + ', shiftByChar: ' + shiftByChar + ', shiftBy:' + shiftBy);
+
     return shiftBy
   }
 
@@ -234,7 +264,8 @@ export class AppComponent implements OnInit {
 
 interface Color {
   hex:string,
-  rgb:number[],
+  small:number,
+  // rgb:number[],
   code:string,
   alpha:string
 }

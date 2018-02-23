@@ -15,6 +15,7 @@
           </div>
         </div>
         <input class="color-input" type="text" [(ngModel)]="baseColor.code" name="baseColor.code" [style.outline-color]="baseColor.hex" (input)="codeInput('baseColor')" maxlength="3" restrictCharacterInput [characterSet]="codeInputChars" (paste)="false" >
+        <!-- <br>{{baseColor.code}}, {{baseColor.hex}}, {{baseColor.small}}, {{baseColor.rgb}} -->
       </div>
     </div>
     <div class="card mb-3 mt-2 box-shadow">
@@ -54,6 +55,7 @@
           </div>
         </div>
         <input class="color-input" type="text" [(ngModel)]="myPrivateColor.code" name="myPrivateColor.code" [style.outline-color]="myPrivateColor.hex" (input)="codeInput('myPrivateColor')" maxlength="3" restrictCharacterInput [characterSet]="codeInputChars" (paste)="false" >
+        <!-- <br>{{myPrivateColor.code}}, {{myPrivateColor.hex}}, {{myPrivateColor.small}}, {{myPrivateColor.rgb}} -->
       </div>
     </div>
     <div class="card mb-3 mt-2 box-shadow">
@@ -92,7 +94,8 @@
               <div class="circle" [(style.background)]="myPublicColor.hex"></div>
             </div>
           </div>
-          <input readonly type="text" class="color-input" [(ngModel)]="myPublicColor.code" name="myPublicColor.code" >
+          <input readonly type="text" class="color-input" [ngModel]="myPublicColor.code" name="myPublicColor.code" >
+          <!-- <br>{{myPublicColor.code}}, {{myPublicColor.hex}}, {{myPublicColor.small}}, {{myPublicColor.rgb}} -->
         </div>
       </div>
       <div class="card mb-3 mt-2 box-shadow">
@@ -133,6 +136,7 @@
             </div>
           </div>
           <input  type="text" class="color-input" [(ngModel)]="friendsPublicColor.code" name="friendsPublicColor.code" [style.outline-color]="friendsPublicColor.hex" (input)="codeInput('friendsPublicColor')" maxlength="3" restrictCharacterInput [characterSet]="codeInputChars" (paste)="false" >
+          <!-- <br>{{friendsPublicColor.code}}, {{friendsPublicColor.hex}}, {{friendsPublicColor.small}}, {{friendsPublicColor.rgb}} -->
         </div>
       </div>
       <div class="card mb-3 mt-2 box-shadow">
@@ -173,6 +177,7 @@
             </div>
           </div>
           <input readonly type="text" class="color-input" [(ngModel)]="sharedSecretColor.code" name="sharedSecretColor.code" >
+          <!-- <br>{{sharedSecretColor.code}}, {{sharedSecretColor.hex}}, {{sharedSecretColor.small}}, {{sharedSecretColor.rgb}} -->
         </div>
       </div>
       <div class="card mb-3 mt-2 box-shadow">

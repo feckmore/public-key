@@ -10,6 +10,8 @@ import { AppComponent } from './app.component';
 import { environment } from '../environments/environment';
 import { RestrictedInputDirective } from './directives/restricted-input.directive';
 
+// import * as ColorMix from "../../node_modules/colormix/dist/colormix";
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,6 +22,7 @@ import { RestrictedInputDirective } from './directives/restricted-input.directiv
     BrowserModule,
     NgbModule.forRoot(),
     ColorPickerModule
+    // ColorMix
   ],
   providers: [],
   bootstrap: [AppComponent]

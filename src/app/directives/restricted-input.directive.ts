@@ -32,7 +32,7 @@ export class RestrictedInputDirective implements OnInit {
         // let it happen, don't do anything
         return;
     }
-    console.log('characterSet: ' + this.characterSet);
+    // console.log('characterSet: ' + this.characterSet);
     
     if (this.characterSet.indexOf(e.key) == -1) {
       e.preventDefault();
