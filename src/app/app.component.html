@@ -1,0 +1,251 @@
+<div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+  <h1 class="display-4">Public Key Cryptography</h1>
+  <p class="lead">Independence Elementary School, Mr. Fall's Class, February 2018</p>
+</div>
+
+<div class="container">
+  <!-- Base Color Card Deck -->
+  <div class="card-deck mb-2 text-center public">
+    <div class="card mb-2">
+      <div class="card-body">
+        <h2 class="color-title">Base <img class="icon random" src="/assets/svg/random.svg" title="Pick Random Color" (click)="randomizeColor('baseColor')"></h2>
+        <div>
+          <div class="paint-container">
+            <div class="circle" [style.background]="baseColor.hex" [colorPicker]="baseColor.hex" (colorPickerChange)="colorInput('baseColor',$event)" [cpDisableInput]="true" ></div> 
+          </div>
+        </div>
+        <input class="color-input" type="text" [(ngModel)]="baseColor.code" name="baseColor.code" [style.outline-color]="baseColor.hex" (input)="codeInput('baseColor')" maxlength="3" restrictCharacterInput [characterSet]="codeInputChars" (paste)="false" >
+      </div>
+    </div>
+    <div class="card mb-3 mt-2 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Me</h4>
+      </div>
+      <div class="card-body" [style.background]="baseColor.hex">
+        <img class="icon-large visible" src="/assets/svg/eye.svg" title="The base color is visible to everyone" >
+      </div>
+    </div>
+    <div class="card mb-3 mt-2 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Spy</h4>
+      </div>
+      <div class="card-body" [style.background]="baseColor.hex">
+        <img class="icon-large visible" src="/assets/svg/eye.svg" title="The base color is visible to everyone" >
+      </div>
+    </div>
+    <div class="card mb-3 mt-2 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Friend</h4>
+      </div>
+      <div class="card-body" [style.background]="baseColor.hex">
+        <img class="icon-large visible" src="/assets/svg/eye.svg" title="The base color is visible to everyone" >
+      </div>
+    </div>
+  </div>
+
+  <!-- My Private Color Card Deck -->
+  <div class="card-deck mb-2 text-center secret">
+    <div class="card mb-2">
+      <div class="card-body">
+        <h2 class="color-title">Private <img class="icon random" src="/assets/svg/random.svg" title="Pick Random Color" (click)="randomizeColor('myPrivateColor')"></h2>
+        <div>
+          <div class="paint-container">
+            <div class="circle" [style.background]="myPrivateColor.hex" [colorPicker]="myPrivateColor.hex" (colorPickerChange)="colorInput('myPrivateColor',$event)" [cpDisableInput]="true" ></div> 
+          </div>
+        </div>
+        <input class="color-input" type="text" [(ngModel)]="myPrivateColor.code" name="myPrivateColor.code" [style.outline-color]="myPrivateColor.hex" (input)="codeInput('myPrivateColor')" maxlength="3" restrictCharacterInput [characterSet]="codeInputChars" (paste)="false" >
+      </div>
+    </div>
+    <div class="card mb-3 mt-2 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Me</h4>
+      </div>
+      <div class="card-body" [style.background]="myPrivateColor.hex">
+        <img class="icon-large visible" src="/assets/svg/eye.svg" title="My private color is visible ONLY to me" >
+      </div>
+    </div>
+    <div class="card mb-3 mt-2 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Spy</h4>
+      </div>
+      <div class="card-body">
+        <img class="icon-large not-visible" src="/assets/svg/circle-x.svg" title="My private color is NOT visible to spys" >
+      </div>
+    </div>
+    <div class="card mb-3 mt-2 box-shadow">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">Friend</h4>
+      </div>
+      <div class="card-body">
+        <img class="icon-large not-visible" src="/assets/svg/circle-x.svg" title="My private color is NOT visible to my friend" >
+      </div>
+    </div>
+  </div>
+
+  <!-- My Public Mixture Color Card Deck -->
+  <div class="card-deck mb-2 text-center public">
+      <div class="card mb-2">
+        <div class="card-body">
+          <h2 class="color-title">My Public</h2>
+          <div>
+            <div class="paint-container">
+              <div class="circle" [(style.background)]="myPublicColor.hex"></div>
+            </div>
+          </div>
+          <input readonly type="text" class="color-input" [(ngModel)]="myPublicColor.code" name="myPublicColor.code" >
+        </div>
+      </div>
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Me</h4>
+        </div>
+        <div class="card-body" [(style.background)]="myPublicColor.hex">
+          <img class="icon-large visible" src="/assets/svg/eye.svg" title="My public color is visible to everyone" >
+        </div>
+      </div>
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Spy</h4>
+        </div>
+        <div class="card-body" [(style.background)]="myPublicColor.hex">
+          <img class="icon-large visible" src="/assets/svg/eye.svg" title="My public color is visible to everyone" >
+        </div>
+      </div>
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Friend</h4>
+        </div>
+        <div class="card-body" [(style.background)]="myPublicColor.hex">
+          <img class="icon-large visible" src="/assets/svg/eye.svg" title="My public color is visible to everyone" >
+        </div>
+      </div>
+    </div>
+
+
+  <!-- Friend's Public Mixture Color Card Deck -->
+  <div class="card-deck mb-2 text-center public">
+      <div class="card mb-2">
+        <div class="card-body">
+          <h2 class="color-title">Friend's Public</h2>
+          <div>
+            <div class="paint-container">
+                <div class="circle" [(style.background)]="friendsPublicColor.hex"></div>
+            </div>
+          </div>
+          <input  type="text" class="color-input" [(ngModel)]="friendsPublicColor.code" name="friendsPublicColor.code" [style.outline-color]="friendsPublicColor.hex" (input)="codeInput('friendsPublicColor')" maxlength="3" restrictCharacterInput [characterSet]="codeInputChars" (paste)="false" >
+        </div>
+      </div>
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Me</h4>
+        </div>
+        <div class="card-body" [(style.background)]="friendsPublicColor.hex">
+          <img class="icon-large visible" src="/assets/svg/eye.svg" title="My public color is visible to everyone" >
+        </div>
+      </div>
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Spy</h4>
+        </div>
+        <div class="card-body" [(style.background)]="friendsPublicColor.hex">
+          <img class="icon-large visible" src="/assets/svg/eye.svg" title="My public color is visible to everyone" >
+        </div>
+      </div>
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Friend</h4>
+        </div>
+        <div class="card-body" [(style.background)]="friendsPublicColor.hex">
+          <img class="icon-large visible" src="/assets/svg/eye.svg" title="My public color is visible to everyone" >
+        </div>
+      </div>
+    </div>
+
+
+  <!-- Shared Secret Color Card Deck -->
+  <div class="card-deck mb-2 text-center secret">
+      <div class="card mb-2">
+        <div class="card-body">
+          <h2 class="color-title">Shared Secret</h2>
+          <div>
+            <div class="paint-container">
+                <div class="circle" [(style.background)]="sharedSecretColor.hex"></div>
+            </div>
+          </div>
+          <input readonly type="text" class="color-input" [(ngModel)]="sharedSecretColor.code" name="sharedSecretColor.code" >
+        </div>
+      </div>
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Me</h4>
+        </div>
+        <div class="card-body" [(style.background)]="sharedSecretColor.hex">
+          <img class="icon-large visible" src="/assets/svg/eye.svg" title="My public color is visible to everyone" >
+        </div>
+      </div>
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Spy</h4>
+        </div>
+        <div class="card-body">
+          <img class="icon-large not-visible" src="/assets/svg/circle-x.svg" title="My public color is visible to everyone" >
+        </div>
+      </div>
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Friend</h4>
+        </div>
+        <div class="card-body" [(style.background)]="sharedSecretColor.hex">
+          <img class="icon-large visible" src="/assets/svg/eye.svg" title="My public color is visible to everyone" >
+        </div>
+      </div>
+    </div>
+
+
+  <!-- Encoding Messages Card Deck -->
+  <div class="card-deck mt-4 mb-2 text-center">
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Encode A Message</h4>
+        </div>
+        <div class="card-body">
+          <img class="icon visible" src="/assets/svg/lock-unlocked.svg" title="Un-encoded message" >
+          <input class="message unencoded" [(ngModel)]="encode" (keyup)="encrypt()" restrictCharacterInput [characterSet]="messageAllowedChars">
+        </div>
+      </div>
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Encoded Message</h4>
+        </div>
+        <div class="card-body" [(style.background)]="sharedSecretColor.hex">
+          <img class="icon not-visible" src="/assets/svg/lock-locked.svg" title="Encoded message" >
+          <input class="message encoded" [(ngModel)]="encoded" readonly>
+        </div>
+      </div>
+    </div>
+
+  <!-- Decoding Messages Card Deck -->
+  <div class="card-deck mt-4 mb-2 text-center">
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Decode A Message</h4>
+        </div>
+        <div class="card-body" [(style.background)]="sharedSecretColor.hex">
+          <img class="icon not-visible" src="/assets/svg/lock-locked.svg" title="Encoded message" >
+          <input class="message encoded" [(ngModel)]="decode" (keyup)="decrypt()" restrictCharacterInput [characterSet]="messageAllowedChars">
+        </div>
+      </div>
+      <div class="card mb-3 mt-2 box-shadow">
+        <div class="card-header">
+          <h4 class="my-0 font-weight-normal">Decoded Message</h4>
+        </div>
+        <div class="card-body">
+          <img class="icon visible" src="/assets/svg/lock-unlocked.svg" title="Decoded message" >
+          <input class="message unencoded" [(ngModel)]="decoded" readonly>
+        </div>
+      </div>
+    </div>
+
+</div>
+
+<div class="empty-space"></div>

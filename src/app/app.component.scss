@@ -1,0 +1,79 @@
+.color-title {
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+}
+
+.color-input {
+  font-family: "Courier New", Courier, monospace;
+  letter-spacing: .18em;
+  width: 3.8em;
+  height: 1.8em;
+  font-size: 26px;
+  text-align: center;
+  font-weight: 800;
+  padding: .25em .3em .18em .5em;
+  border: none;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #dddddd;
+  border-radius: 4px;
+}
+
+.secret .color-input {
+  color: #eeeeee;
+
+  &:hover {
+    color: #666666;
+  }
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  margin: 0 10px;
+}
+
+.icon-large {
+  width: 80px;
+  height: 80px;
+  // margin: 20px;
+  border-radius: 40px;
+  padding: 5px;
+  background-color: #FFFFFF;
+
+  &.not-visible {
+    border: 4px dashed #cccccc;
+  }
+  &.visible {
+    border: 8px solid #cccccc;
+  }
+}
+
+.circle {
+  clear: both;
+  width: 50px;
+	height: 50px;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 25px;
+  border-radius: 25px;
+  border: 1px solid #cccccc;
+  margin: 4px;
+}
+
+.paint-container {
+  display: inline-block;
+  overflow: hidden;
+}
+
+.message {
+  width: 80%;
+}
+
+.empty-space{
+  height: 700px;
+}
+
+// overriding bootstrap, in a hurry
+.card-body {
+  padding: 1rem;
+}
