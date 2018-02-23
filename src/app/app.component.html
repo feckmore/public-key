@@ -170,7 +170,7 @@
   <div class="card-deck mb-2 text-center secret">
       <div class="card mb-2">
         <div class="card-body">
-          <h2 class="color-title">Shared Secret</h2>
+          <h2 class="color-title">Shared Secret <img class="icon" src="assets/svg/key.svg" title="Shared Secret Key"></h2>
           <div>
             <div class="paint-container">
                 <div class="circle" [(style.background)]="sharedSecretColor.hex"></div>
@@ -211,7 +211,7 @@
   <div class="card-deck mt-4 mb-2 text-center">
       <div class="card mb-3 mt-2 box-shadow">
         <div class="card-header">
-          <h4 class="my-0 font-weight-normal">Encode A Message</h4>
+          <h4 class="my-0 font-weight-normal">Encrypt A Message</h4>
         </div>
         <div class="card-body">
           <img class="icon visible" src="assets/svg/lock-unlocked.svg" title="Un-encoded message" >
@@ -220,7 +220,7 @@
       </div>
       <div class="card mb-3 mt-2 box-shadow">
         <div class="card-header">
-          <h4 class="my-0 font-weight-normal">Encoded Message</h4>
+          <h4 class="my-0 font-weight-normal">Encrypted Message</h4>
         </div>
         <div class="card-body" [(style.background)]="sharedSecretColor.hex">
           <img class="icon not-visible" src="assets/svg/lock-locked.svg" title="Encoded message" >
@@ -233,7 +233,7 @@
   <div class="card-deck mt-4 mb-2 text-center">
       <div class="card mb-3 mt-2 box-shadow">
         <div class="card-header">
-          <h4 class="my-0 font-weight-normal">Decode A Message</h4>
+          <h4 class="my-0 font-weight-normal">Decrypt A Message</h4>
         </div>
         <div class="card-body" [(style.background)]="sharedSecretColor.hex">
           <img class="icon not-visible" src="assets/svg/lock-locked.svg" title="Encoded message" >
@@ -242,7 +242,7 @@
       </div>
       <div class="card mb-3 mt-2 box-shadow">
         <div class="card-header">
-          <h4 class="my-0 font-weight-normal">Decoded Message</h4>
+          <h4 class="my-0 font-weight-normal">Decrypted Message</h4>
         </div>
         <div class="card-body">
           <img class="icon visible" src="assets/svg/lock-unlocked.svg" title="Decoded message" >
